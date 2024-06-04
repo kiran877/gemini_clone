@@ -1,52 +1,61 @@
-
-import './Sidebar.css'
-import { assets } from '../../assets/assets'
-import { useState } from 'react'
+import './Sidebar.css';
+import { assets } from '../../assets/assets';
+import { useContext, useState } from 'react';
+import { Context } from '../../Context/Context';
 
 export const Sidebar = () => {
+  const [extended, setExtended] = useState(false);
+  const { onsent, prevPrompt, setRecentPrompt,newChat} = useContext(Context);
 
-  const[extended,setExtended]=useState(false);
+  const loadprompt =async(prompt)=>{
+    setRecentPrompt(prompt)
+    await onsent(prompt)
+  }
 
   return (
     <div className='Sidebar'>
+      <div className='Top'>
+        <img 
+          onClick={() => setExtended(prev => !prev)} 
+          className='Menu' 
+          src={assets.menu_icon} 
+          alt="Menu Icon" 
+        />
 
-        <div className='Top'>
-        <img onClick={()=>setExtended(prev=>!prev)}className='Menu'src={assets.menu_icon} alt="" />
-
-        <div className="new-chat">
-        <img src={assets.plus_icon} alt="" />
-        {extended?<p>New chat</p>:null}
+        <div onClick={()=>newChat()} className="new-chat">
+          <img src={assets.plus_icon} alt="Plus Icon" />
+          {extended ? <p>New chat</p> : null}
         </div>
-        
-        {extended?
-        <div className="Recent">
-          <p className='Recent-title'>Recent</p>  
-          <div className="Recent-entry">
-            <img src={assets.message_icon} alt="" />
-            <p>What is react..</p>
+
+        {extended && (
+          <div className="Recent">
+            <p className='Recent-title'>Recent</p>
+            {prevPrompt.map((item, index) => (
+              <div onClick={()=>loadprompt(item)} className="Recent-entry" key={index}>
+                <img src={assets.message_icon} alt="Message Icon" />
+                <p>{item.slice(0,18)}...</p>
+              </div>
+            ))}
           </div>
+        )}
+      </div>
+
+      <div className="Bottom">
+        <div className="Bottom-items Recent-entry">
+          <img src={assets.question_icon} alt="Question Icon" />
+          {extended ? <p>Help</p> : null}
         </div>
-        :null}
 
+        <div className="Bottom-items Recent-entry">
+          <img src={assets.history_icon} alt="History Icon" />
+          {extended ? <p>Activity</p> : null}
         </div>
 
-        <div className="Bottom">
-            <div className="Bottom-items Recent-entry">
-                <img src={assets.question_icon} alt="" />
-               {extended? <p>Help</p>:null}
-            </div>
-
-            <div className="Bottom-items Recent-entry">
-                <img src={assets.history_icon} alt="" />
-                {extended? <p>Activity</p>:null}
-            </div>
-
-            <div className="Bottom-items Recent-entry">
-                <img src={assets.setting_icon} alt="" />
-                {extended? <p>Settings</p>:null}
-            </div>
-
+        <div className="Bottom-items Recent-entry">
+          <img src={assets.setting_icon} alt="Setting Icon" />
+          {extended ? <p>Settings</p> : null}
         </div>
+      </div>
     </div>
-  )
-}
+  );
+};
