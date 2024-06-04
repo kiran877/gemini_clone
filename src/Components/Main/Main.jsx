@@ -5,8 +5,7 @@ import { Context } from '../../Context/Context';
 
 const Main = () => {
     const {
-        prevPrompt,
-        setPrevPrompt,
+
         onsent,
         recentPrompt,
         showResult,
