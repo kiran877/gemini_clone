@@ -1,8 +1,10 @@
 pipeline {
-    agent any
+    agent {
 
-    tools {
-        nodejs "nodejs-14" // Name of the NodeJS installation configured in Jenkins
+   docker {
+            image 'node:14-alpine'
+            args '-u root:root' // Use root user to avoid permission issues
+        }
     }
 
     environment {
